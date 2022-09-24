@@ -20,6 +20,10 @@ class ShowActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show)
         getExpense()
+        showRV()
+    }
+
+    private fun showRV(){
         val adapter = ExpensesRVAdapter(this, bookList)
         val rvListener = object : ExpensesRVAdapter.ItemClickListener{
             override fun onItemClick(view: View?, position: Int) {
@@ -34,6 +38,13 @@ class ShowActivity : AppCompatActivity() {
         rv = findViewById(R.id.rv)
         rv.adapter = adapter
         rv.layoutManager = LinearLayoutManager(this)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        getExpense()
+        showRV()
     }
     private fun getExpense() {
         val preferences = getSharedPreferences("pref", MODE_PRIVATE)
