@@ -4,26 +4,37 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.example.a11pac.data.DATABASE_NAME
+import com.example.a11pac.data.MoneyDataBase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.concurrent.Executors
 
 class ShowActivity : AppCompatActivity() {
     private var bookList: MutableList<Expenses> = mutableListOf()
     private lateinit var rv: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
+        val executor = Executors.newSingleThreadExecutor()
+        val moneyDAO = db.moneyDAO()
         setContentView(R.layout.activity_show)
-        getExpense()
-        showRV()
-    }
+        val types = moneyDAO.getAllTypes()
 
-    private fun showRV(){
+        types.observe(this, androidx.lifecycle.Observer {
+            it.forEach{
+                Log.d("gigi", "${{it.id}}==={${it.title}}===")
+            }
+        })
+        //getExpense()
         val adapter = ExpensesRVAdapter(this, bookList)
         val rvListener = object : ExpensesRVAdapter.ItemClickListener{
             override fun onItemClick(view: View?, position: Int) {
@@ -40,13 +51,7 @@ class ShowActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(this)
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        getExpense()
-        showRV()
-    }
-    private fun getExpense() {
+    /*private fun getExpense() {
         val preferences = getSharedPreferences("pref", MODE_PRIVATE)
         var json: String = ""
         if (!preferences.contains("json"))
@@ -57,5 +62,5 @@ class ShowActivity : AppCompatActivity() {
         }
         val temp = Gson().fromJson<List<Expenses>>(json, object: TypeToken<List<Expenses>>(){}.type)
         bookList.addAll(temp)
-    }
+    }*/
 }
