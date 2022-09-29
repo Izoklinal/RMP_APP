@@ -10,6 +10,7 @@ import androidx.core.content.edit
 import androidx.room.Room
 import com.example.a11pac.data.DATABASE_NAME
 import com.example.a11pac.data.MoneyDataBase
+import com.example.a11pac.data.models.Cost
 import com.example.a11pac.data.models.CostType
 import com.example.a11pac.databinding.ActivityMainBinding
 import com.google.gson.Gson
@@ -32,12 +33,14 @@ class MainActivity : AppCompatActivity() {
             moneyDAO.addType(CostType(0, "Коммуналка"))
         }*/
         val types = moneyDAO.getAllTypes()
-
-        /*types.observe(this, androidx.lifecycle.Observer {
+        types.observe(this, androidx.lifecycle.Observer {
             it.forEach{
                 Log.d("gigi", "${{it.id}}==={${it.title}}===")
             }
-        })*/
+        })
+        executor.execute {
+            moneyDAO.addType(CostType(0, binding.editTextName.text.toString()))
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -49,9 +52,9 @@ class MainActivity : AppCompatActivity() {
                 if (change == 0) {
                     /*Expenses(name.text.toString(), cost.text.toString().toInt())
                     addExpense(name.text.toString(), cost.text.toString().toInt())*/
-                    executor.execute {
+                    /*executor.execute {
                         moneyDAO.addType(CostType(0, binding.editTextName.text.toString()))
-                    }
+                    }*/
                     Toast.makeText(this, "Успешно добавлено", Toast.LENGTH_SHORT).show()
                 } else {
                     /*bookList[position] = Expenses(name.text.toString(), cost.text.toString().toInt())
@@ -59,9 +62,9 @@ class MainActivity : AppCompatActivity() {
                     preferences.edit {
                         this.putString("json", Gson().toJson(bookList).toString())
                     }*/
-                    executor.execute {
+                    /*executor.execute {
                         moneyDAO.saveType(CostType(position, binding.editTextName.text.toString()))
-                    }
+                    }*/
                 }
             } else {
                 Toast.makeText(this, "Нельзя добавить пустую строку", Toast.LENGTH_SHORT).show()

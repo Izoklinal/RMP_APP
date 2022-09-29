@@ -23,17 +23,18 @@ class ShowActivity : AppCompatActivity() {
     private lateinit var rv: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
-        val executor = Executors.newSingleThreadExecutor()
-        val moneyDAO = db.moneyDAO()
         setContentView(R.layout.activity_show)
-        val types = moneyDAO.getAllTypes()
+        //val costs = moneyDAO.getAllCosts()
 
-        types.observe(this, androidx.lifecycle.Observer {
+        /*types.observe(this, androidx.lifecycle.Observer {
             it.forEach{
                 Log.d("gigi", "${{it.id}}==={${it.title}}===")
             }
-        })
+        })*/
+        /*costs.forEach {
+            Log.d("beb", "${it.id}   ${it.typeId}   ${it.cost}   ${it.description}   ${it.buyDate}")
+        }*/
+
         //getExpense()
         val adapter = ExpensesRVAdapter(this, bookList)
         val rvListener = object : ExpensesRVAdapter.ItemClickListener{
