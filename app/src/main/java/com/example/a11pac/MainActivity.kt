@@ -3,22 +3,17 @@ package com.example.a11pac
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.room.Room
 import com.example.a11pac.data.DATABASE_NAME
 import com.example.a11pac.data.MoneyDataBase
 import com.example.a11pac.data.models.Cost
 import com.example.a11pac.data.models.CostType
 import com.example.a11pac.databinding.ActivityMainBinding
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
-    private var bookList: MutableList<Expenses> = mutableListOf()
     private var change: Int = 0
     private var position: Int = -1
     private lateinit var binding: ActivityMainBinding
@@ -32,6 +27,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         val name = findViewById<EditText>(R.id.editText_name)
         val cost = findViewById<EditText>(R.id.editText_cost)
+        val types = moneyDAO.getAllTypes()
+        var titles: MutableList<String> = mutableListOf()
+        types.observe(this, androidx.lifecycle.Observer {
+            it.forEach{
+                titles.add(it.title)
+            }
+        })
+        Log.d("work", "${titles}")
         binding.addButton.setOnClickListener {
             listOf(if (name.text.toString() != ""
                 && cost.text.toString() != "" &&
@@ -81,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
         val moneyDAO = db.moneyDAO()
         position = intent.getIntExtra("pos", -1)
-        Log.d("work", "position - $position")
         val tempCost = moneyDAO.getAllCosts()
         val tempType = moneyDAO.getAllTypes()
         if (position!=-1)

@@ -30,13 +30,9 @@ class ShowActivity : AppCompatActivity() {
         val types = moneyDAO.getAllTypes()
         costs.observe(this, androidx.lifecycle.Observer {
             it.forEach {
-                //Log.d("table", "${it.id} | ${it.typeId} | ${it.cost} | ${it.description} | ${it.buyDate}")
                 val temp = Expenses(it.typeId.toString(), it.cost, it.description, it.buyDate)
                 bookList.add(temp)
             }
-            /*bookList.forEach{
-                Log.d("temp", "${it.name} | ${it.cost} | ${it.desc} | ${it.date}")
-            }*/
             val adapter = ExpensesRVAdapter(this, bookList)
             val rvListener = object : ExpensesRVAdapter.ItemClickListener{
                 override fun onItemClick(view: View?, position: Int) {
