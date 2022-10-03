@@ -24,44 +24,32 @@ class ShowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show)
-        //val costs = moneyDAO.getAllCosts()
-
-        /*types.observe(this, androidx.lifecycle.Observer {
-            it.forEach{
-                Log.d("gigi", "${{it.id}}==={${it.title}}===")
+        val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
+        val moneyDAO = db.moneyDAO()
+        val costs = moneyDAO.getAllCosts()
+        val types = moneyDAO.getAllTypes()
+        costs.observe(this, androidx.lifecycle.Observer {
+            it.forEach {
+                //Log.d("table", "${it.id} | ${it.typeId} | ${it.cost} | ${it.description} | ${it.buyDate}")
+                val temp = Expenses(it.typeId.toString(), it.cost, it.description, it.buyDate)
+                bookList.add(temp)
             }
-        })*/
-        /*costs.forEach {
-            Log.d("beb", "${it.id}   ${it.typeId}   ${it.cost}   ${it.description}   ${it.buyDate}")
-        }*/
-
-        //getExpense()
-        val adapter = ExpensesRVAdapter(this, bookList)
-        val rvListener = object : ExpensesRVAdapter.ItemClickListener{
-            override fun onItemClick(view: View?, position: Int) {
-                val intent = Intent(this@ShowActivity, MainActivity::class.java)
-                intent.putExtra("pos", position)
-                var indexChanged = position
-                startActivity(intent)
-                Toast.makeText(this@ShowActivity, "position: $position", Toast.LENGTH_SHORT).show()
+            /*bookList.forEach{
+                Log.d("temp", "${it.name} | ${it.cost} | ${it.desc} | ${it.date}")
+            }*/
+            val adapter = ExpensesRVAdapter(this, bookList)
+            val rvListener = object : ExpensesRVAdapter.ItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    val intent = Intent(this@ShowActivity, MainActivity::class.java)
+                    intent.putExtra("pos", position)
+                    startActivity(intent)
+                    Toast.makeText(this@ShowActivity, "position: $position", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
-        adapter.setClickListener(rvListener)
-        rv = findViewById(R.id.rv)
-        rv.adapter = adapter
-        rv.layoutManager = LinearLayoutManager(this)
+            adapter.setClickListener(rvListener)
+            rv = findViewById(R.id.rv)
+            rv.adapter = adapter
+            rv.layoutManager = LinearLayoutManager(this)
+        })
     }
-
-    /*private fun getExpense() {
-        val preferences = getSharedPreferences("pref", MODE_PRIVATE)
-        var json: String = ""
-        if (!preferences.contains("json"))
-        {
-            return
-        } else {
-            json = preferences.getString("json", "NOT_JSON").toString()
-        }
-        val temp = Gson().fromJson<List<Expenses>>(json, object: TypeToken<List<Expenses>>(){}.type)
-        bookList.addAll(temp)
-    }*/
 }

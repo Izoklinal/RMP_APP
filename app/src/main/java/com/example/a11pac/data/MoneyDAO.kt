@@ -20,7 +20,7 @@ interface MoneyDAO {
 
     /* Таблица CostType */
     @Query("SELECT * FROM $COSTS_TABLE")
-    fun getAllCosts(): List<Cost>
+    fun getAllCosts(): LiveData<List<Cost>>
     @Query("SELECT * FROM $COSTS_TABLE WHERE _id=:id")
     fun getCost(id:Int): LiveData<Cost>
     @Insert

@@ -21,6 +21,8 @@ class ExpensesRVAdapter(context: Context?, val data:MutableList<Expenses>) : Rec
         val item = data[position]
         holder.name.text = item.name
         holder.cost.text = item.cost.toString()
+        holder.date.text = item.date.toString()
+        holder.desc.text = item.desc
     }
 
     override fun getItemCount(): Int = data.size
@@ -28,6 +30,8 @@ class ExpensesRVAdapter(context: Context?, val data:MutableList<Expenses>) : Rec
     inner class ExpenseViewHolder(item: View) : RecyclerView.ViewHolder(item), View.OnClickListener{
         var name: TextView = item.findViewById(R.id.tvName)
         var cost: TextView = item.findViewById(R.id.tvCost)
+        var date: TextView = item.findViewById(R.id.tvDate)
+        var desc: TextView = item.findViewById(R.id.tvDesc)
         init {
             itemView.setOnClickListener(this)
         }
