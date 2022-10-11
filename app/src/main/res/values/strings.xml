@@ -10,5 +10,6 @@
     <string name="cont">Продолжить</string>
     <string name="description">Описание</string>
     <string name="delete">Удалить</string>
+    <string name="back">Назад</string>
 
 </resources>

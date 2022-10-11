@@ -9,12 +9,13 @@
 
     <TextView
 
-        android:textColor="@color/red_text"
         android:id="@+id/textView5"
-        android:textSize="22sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/expenses_book"
+        android:textColor="@color/red_text"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,4 +32,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="89dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/red_button"
+        android:text="@string/back"
+        android:textColor="@color/red_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

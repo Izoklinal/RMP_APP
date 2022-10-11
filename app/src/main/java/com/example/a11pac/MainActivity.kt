@@ -12,12 +12,14 @@ import com.example.a11pac.data.MoneyDataBase
 import com.example.a11pac.data.models.Cost
 import com.example.a11pac.data.models.CostType
 import com.example.a11pac.databinding.ActivityMainBinding
+import java.util.*
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     private var change: Int = 0
     private var position: Int = -1
     private lateinit var binding: ActivityMainBinding
+    private val bookExpenses: MutableList<Cost> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
@@ -28,6 +30,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         val name = findViewById<EditText>(R.id.editText_name)
         val cost = findViewById<EditText>(R.id.editText_cost)
+
+        /*buttonDelte.setOnClickListener {
+            executor.execute{
+                knigaDAO.killBook(KnigaTypes(index+10, DeleteBook[index].name, DeleteBook[index].author, DeleteBook[index].numPages))
+                knigaDAO.killZhanr(KnigaZhanr(index+10,0, DeleteBookZhanr[index].zhanr, Date()))
+            }
+            toast.show()
+        }*/
+
+        db.moneyDAO().getAllCosts().observe(this, androidx.lifecycle.Observer {
+            bookExpenses.addAll(it)
+        })
+
+        binding.delete.setOnClickListener {
+            executor.execute{
+                moneyDAO.killCost(Cost(position, bookExpenses[position].typeId,
+                bookExpenses[position].cost, bookExpenses[position].description,
+                bookExpenses[position].buyDate))
+            }
+            Toast.makeText(this, "yep", Toast.LENGTH_SHORT).show()
+        }
+
         binding.addButton.setOnClickListener {
             listOf(if (name.text.toString() != ""
                 && cost.text.toString() != "" &&
@@ -46,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     Toast.makeText(this, "Успешно добавлено", Toast.LENGTH_SHORT).show()
                 } else {
-                    binding.delete.visibility = View.VISIBLE
+
                     executor.execute {
                         moneyDAO.saveType(
                             CostType(
@@ -75,9 +99,11 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
+        binding.delete.visibility = View.INVISIBLE
         val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
         val moneyDAO = db.moneyDAO()
         position = intent.getIntExtra("pos", -1)
+        Log.d("working", "$position")
         val tempCost = moneyDAO.getAllCosts()
         val tempType = moneyDAO.getAllTypes()
         if (position!=-1)
@@ -91,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             })
             change = 1
             binding.addButton.text = "Изменить"
+            binding.delete.visibility = View.VISIBLE
         } else {
             change = 0
             binding.addButton.text = "Добавить"

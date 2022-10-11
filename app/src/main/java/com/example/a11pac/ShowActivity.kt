@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +21,8 @@ import java.util.concurrent.Executors
 
 class ShowActivity : AppCompatActivity() {
     private var bookList: MutableList<Expenses> = mutableListOf()
+    private var pos = -1
+
     private lateinit var rv: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,13 @@ class ShowActivity : AppCompatActivity() {
 
         val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
         val moneyDAO = db.moneyDAO()
+
+        val back = findViewById<Button>(R.id.back)
+        back.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@ShowActivity, MainActivity::class.java)
+            intent.putExtra("pos", -1)
+            startActivity(intent)
+        })
 
         val costs = moneyDAO.getAllCosts()
         costs.observe(this, androidx.lifecycle.Observer {
@@ -38,8 +48,9 @@ class ShowActivity : AppCompatActivity() {
             val adapter = ExpensesRVAdapter(this, bookList)
             val rvListener = object : ExpensesRVAdapter.ItemClickListener{
                 override fun onItemClick(view: View?, position: Int) {
+                    pos = position
                     val intent = Intent(this@ShowActivity, MainActivity::class.java)
-                    intent.putExtra("pos", position-1)
+                    intent.putExtra("pos", pos)
                     startActivity(intent)
                     //Toast.makeText(this@ShowActivity, "position: $position", Toast.LENGTH_SHORT).show()
                 }
@@ -49,5 +60,10 @@ class ShowActivity : AppCompatActivity() {
             rv.adapter = adapter
             rv.layoutManager = LinearLayoutManager(this)
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pos = -1
     }
 }
