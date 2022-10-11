@@ -9,5 +9,6 @@
     <string name="expenses_book">Учет расходов</string>
     <string name="cont">Продолжить</string>
     <string name="description">Описание</string>
+    <string name="delete">Удалить</string>
 
 </resources>

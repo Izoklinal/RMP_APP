@@ -24,22 +24,24 @@ class ShowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show)
+
         val db: MoneyDataBase = Room.databaseBuilder(this, MoneyDataBase::class.java, DATABASE_NAME).build()
         val moneyDAO = db.moneyDAO()
+
         val costs = moneyDAO.getAllCosts()
-        val types = moneyDAO.getAllTypes()
         costs.observe(this, androidx.lifecycle.Observer {
             it.forEach {
-                val temp = Expenses(it.typeId.toString(), it.cost, it.description, it.buyDate)
+                val temp = Expenses(it.typeId, it.cost, it.description, it.buyDate)
                 bookList.add(temp)
             }
+
             val adapter = ExpensesRVAdapter(this, bookList)
             val rvListener = object : ExpensesRVAdapter.ItemClickListener{
                 override fun onItemClick(view: View?, position: Int) {
                     val intent = Intent(this@ShowActivity, MainActivity::class.java)
-                    intent.putExtra("pos", position)
+                    intent.putExtra("pos", position-1)
                     startActivity(intent)
-                    Toast.makeText(this@ShowActivity, "position: $position", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@ShowActivity, "position: $position", Toast.LENGTH_SHORT).show()
                 }
             }
             adapter.setClickListener(rvListener)

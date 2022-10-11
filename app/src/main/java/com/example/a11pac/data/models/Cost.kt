@@ -12,8 +12,7 @@ data class Cost(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = BaseColumns._ID)
     val id: Int,
-    @ColumnInfo(index = true)
-    var typeId: Int = 0,
+    var typeId: String = "",
     var cost: Float,
     var description: String = "",
     var buyDate: Date = Date()

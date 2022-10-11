@@ -3,6 +3,7 @@ package com.example.a11pac
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
@@ -27,14 +28,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         val name = findViewById<EditText>(R.id.editText_name)
         val cost = findViewById<EditText>(R.id.editText_cost)
-        val types = moneyDAO.getAllTypes()
-        var titles: MutableList<String> = mutableListOf()
-        types.observe(this, androidx.lifecycle.Observer {
-            it.forEach{
-                titles.add(it.title)
-            }
-        })
-        Log.d("work", "${titles}")
         binding.addButton.setOnClickListener {
             listOf(if (name.text.toString() != ""
                 && cost.text.toString() != "" &&
@@ -45,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                         moneyDAO.addCost(
                             Cost(
                                 0,
-                                1,
+                                name.text.toString(),
                                 cost.text.toString().toFloat(),
                                 binding.editTextDesc.text.toString()
                             )
@@ -53,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     Toast.makeText(this, "Успешно добавлено", Toast.LENGTH_SHORT).show()
                 } else {
+                    binding.delete.visibility = View.VISIBLE
                     executor.execute {
                         moneyDAO.saveType(
                             CostType(
@@ -62,8 +56,8 @@ class MainActivity : AppCompatActivity() {
                         )
                         moneyDAO.saveCost(
                             Cost(
-                                position + 1,
-                                0,
+                                position,
+                                name.text.toString(),
                                 cost.text.toString().toFloat(),
                                 binding.editTextDesc.text.toString()
                             )

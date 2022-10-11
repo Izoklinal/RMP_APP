@@ -67,6 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editText_cost" />
 
     <EditText
+        android:inputType="number"
         android:textColor="@color/red_text"
         android:textColorHint="@color/red_text"
         android:backgroundTint="@color/red_text"
@@ -120,15 +121,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_button" />
 
-    <Spinner
-        android:id="@+id/spinner"
+    <Button
+        android:visibility="invisible"
+        android:id="@+id/delete"
         android:layout_width="240dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/red_text"
+        android:text="@string/delete"
+        android:backgroundTint="@color/red_button"
+        android:textColor="@color/red_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_button"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/show_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
